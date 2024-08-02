@@ -1,0 +1,53 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: bytestream_db
+          POSTGRES_USER: your_db_user
+          POSTGRES_PASSWORD: your_db_password
+        options: >-
+          --health-cmd "pg_isready -U your_db_user" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5 
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m venv env
+        source env/bin/activate
+        pip install -r backend/requirements.txt
+
+    - name: Run tests
+      run: |
+        source env/bin/activate
+        python manage.py test
+
+    - name: Build Docker image
+      run: |
+        docker build -t cmaundu/bytestream-backend ./backend
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        docker push cmaundu/bytestream-backend
