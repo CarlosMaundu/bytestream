@@ -1,4 +1,4 @@
-name: Frontend CD
+name: Deploy to Kubernetes
 
 on:
   push:
@@ -26,12 +26,20 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and push Docker image
+    - name: Build and push Docker image - backend
+      run: |
+        docker build -t cmaundu/bytestream-backend ./backend
+        docker push cmaundu/bytestream-backend
+
+    - name: Build and push Docker image - frontend
       run: |
         docker build -t cmaundu/bytestream-frontend ./frontend
         docker push cmaundu/bytestream-frontend
 
     - name: Deploy to Kubernetes
       run: |
+        kubectl apply -f k8s/backend-deployment.yaml
+        kubectl apply -f k8s/backend-service.yaml
         kubectl apply -f k8s/frontend-deployment.yaml
         kubectl apply -f k8s/frontend-service.yaml
+        kubectl apply -f k8s/ingress.yaml
