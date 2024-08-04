@@ -96,3 +96,9 @@ postgresql.conf
 # Miscellaneous
 *.swp
 *.swo
+
+# Kubeconfig files
+kubeconfig
+kubeconfig.base64
+kubeconfig
+kubeconfig.base64
