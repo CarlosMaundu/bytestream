@@ -43,11 +43,11 @@ jobs:
         KUBECONFIG: $HOME/.kube/config
 
     - name: Deploy to Kubernetes
+      env:
+        KUBECONFIG: $HOME/.kube/config
       run: |
         kubectl apply -f k8s/backend-deployment.yaml
         kubectl apply -f k8s/backend-service.yaml
         kubectl apply -f k8s/frontend-deployment.yaml
         kubectl apply -f k8s/frontend-service.yaml
         kubectl apply -f k8s/ingress.yaml
-      env:
-        KUBECONFIG: $HOME/.kube/config
