@@ -26,6 +26,10 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+    - name: Set up kubeconfig
+      run: |
+        echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
+
     - name: Build and push Docker image - backend
       run: |
         docker build -t cmaundu/bytestream-backend ./backend
