@@ -50,17 +50,13 @@ jobs:
 
     - name: Decode and set KUBECONFIG
       run: |
-        mkdir -p $HOME/.kube
         echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
-        cat $HOME/.kube/config
-
-    - name: List kubeconfig files
-      run: |
+        mkdir -p ~/.kube
+        cp $HOME/.kube/config ~/.kube/config
         ls -la $HOME/.kube
+        cat ~/.kube/config
 
     - name: Verify kubectl configuration
-      env:
-        KUBECONFIG: $HOME/.kube/config
       run: |
         kubectl config view
         kubectl get nodes
