@@ -26,7 +26,6 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-
     - name: Build and push Docker image - backend
       id: backend_image
       run: |
@@ -48,12 +47,11 @@ jobs:
     - name: Update manifests with new frontend image
       run: |
         sed -i "s~image:.*frontend.*$~image: ${{ steps.frontend_image.outputs.tag }}~g" k8s/frontend-deployment.yaml
-
     - name: Decode and set KUBECONFIG
       run: |
         echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
-        mkdir -p ~/.kube
-        mv $HOME/.kube/config ~/.kube/config
+        chmod 600 $HOME/.kube/config
+        chown runner:docker $HOME/.kube/config
 
     - name: List kubeconfig files
       run: |
