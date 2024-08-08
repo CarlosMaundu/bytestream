@@ -6,6 +6,7 @@ on:
 
 jobs:
   deploy:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -27,9 +28,15 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and push Docker image
+      id: frontend_image
       run: |
-        docker build -t cmaundu/bytestream-frontend ./frontend
-        docker push cmaundu/bytestream-frontend
+        docker build -t cmaundu/bytestream-frontend:latest ./frontend
+        docker push cmaundu/bytestream-frontend:latest
+        echo "::set-output name=tag::cmaundu/bytestream-frontend:latest"
+
+    - name: Update manifests with new frontend image
+      run: |
+        sed -i "s~image:.*frontend.*$~image: ${{ steps.frontend_image.outputs.tag }}~g" k8s/frontend-deployment.yaml
 
     - name: Decode and set KUBECONFIG
       run: |

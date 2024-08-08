@@ -41,11 +41,13 @@ jobs:
       run: |
         mkdir -p $HOME/.kube
         echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
-        cat $HOME/.kube/config
+        chmod 600 $HOME/.kube/config
+        chown runner:docker $HOME/.kube/config
 
     - name: List kubeconfig files
       run: |
         ls -la $HOME/.kube
+        cat $HOME/.kube/config
 
     - name: Verify kubectl configuration
       env:
