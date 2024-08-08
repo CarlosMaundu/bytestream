@@ -41,19 +41,18 @@ jobs:
       run: |
         mkdir -p $HOME/.kube
         echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
-        chmod 600 $HOME/.kube/config
-        chown runner:docker $HOME/.kube/config
+        cp $HOME/.kube/config ~/.kube/config
+        chmod 600 ~/.kube/config
+        chown runner:docker ~/.kube/config
 
     - name: List kubeconfig files
       run: |
         ls -la $HOME/.kube
-        cat $HOME/.kube/config
 
     - name: Verify kubectl configuration
       env:
         KUBECONFIG: $HOME/.kube/config
       run: |
-        export KUBECONFIG=$HOME/.kube/config
         kubectl config view
         kubectl get nodes
 
@@ -61,6 +60,5 @@ jobs:
       env:
         KUBECONFIG: $HOME/.kube/config
       run: |
-        export KUBECONFIG=$HOME/.kube/config
         kubectl apply -f k8s/backend-deployment.yaml
         kubectl apply -f k8s/backend-service.yaml
