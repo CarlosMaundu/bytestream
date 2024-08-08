@@ -48,10 +48,17 @@ jobs:
       run: |
         ls -la $HOME/.kube
 
+    - name: Set context for kubectl
+      env:
+        KUBECONFIG: $HOME/.kube/config
+      run: |
+        kubectl config use-context <your-context-name> || echo "Context not set"
+
     - name: Verify kubectl configuration
       env:
         KUBECONFIG: $HOME/.kube/config
       run: |
+        echo "KUBECONFIG is set to: $KUBECONFIG"
         kubectl config view
         kubectl get nodes
 
