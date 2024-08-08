@@ -42,28 +42,17 @@ jobs:
         mkdir -p $HOME/.kube
         echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
         chmod 600 $HOME/.kube/config
+        chown runner:docker $HOME/.kube/config
         cat $HOME/.kube/config
 
     - name: List kubeconfig files
       run: |
         ls -la $HOME/.kube
 
-    - name: Set context for kubectl
-      env:
-        KUBECONFIG: $HOME/.kube/config
-      run: |
-        context=$(kubectl config get-contexts -o name | head -n 1)
-        if [ -z "$context" ]; then
-          echo "No context found in kubeconfig"
-        else
-          kubectl config use-context $context
-        fi
-
     - name: Verify kubectl configuration
       env:
         KUBECONFIG: $HOME/.kube/config
       run: |
-        echo "KUBECONFIG is set to: $KUBECONFIG"
         kubectl config view
         kubectl get nodes
 
