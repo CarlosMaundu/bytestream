@@ -41,9 +41,8 @@ jobs:
       run: |
         mkdir -p $HOME/.kube
         echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
-        cp $HOME/.kube/config ~/.kube/config
-        chmod 600 ~/.kube/config
-        chown runner:docker ~/.kube/config
+        chmod 600 $HOME/.kube/config
+        chown runner:docker $HOME/.kube/config
 
     - name: List kubeconfig files
       run: |
