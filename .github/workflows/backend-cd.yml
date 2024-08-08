@@ -53,6 +53,7 @@ jobs:
       env:
         KUBECONFIG: $HOME/.kube/config
       run: |
+        export KUBECONFIG=$HOME/.kube/config
         kubectl config view
         kubectl get nodes
 
@@ -60,5 +61,6 @@ jobs:
       env:
         KUBECONFIG: $HOME/.kube/config
       run: |
+        export KUBECONFIG=$HOME/.kube/config
         kubectl apply -f k8s/backend-deployment.yaml
         kubectl apply -f k8s/backend-service.yaml
