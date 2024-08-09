@@ -1,10 +1,19 @@
+# Dockerfile for backend
 FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip && pip install -r requirements.txt gunicorn
+# Copy requirements file
+COPY requirements.txt .
 
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
 COPY . .
 
+# Expose port 8000
+EXPOSE 8000
+
+# Run the application
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "backend.wsgi"]

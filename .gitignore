@@ -102,3 +102,7 @@ kubeconfig
 kubeconfig.base64
 kubeconfig
 kubeconfig.base64
+
+# Ignore secret files
+secret.yaml
+config-map.yaml

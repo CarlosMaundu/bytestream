@@ -24,3 +24,26 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "1"
+          env:
+            - name: DB_HOST
+              value: "127.0.0.1"  # Node IP where PostgreSQL is running
+            - name: DB_PORT
+              value: "30007"
+            - name: DB_NAME
+              value: "bytestream"
+            - name: DB_USER
+              value: "myuser"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bytestream-secret
+                  key: DB_PASSWORD
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bytestream-secret
+                  key: SECRET_KEY
+            - name: ALLOWED_HOSTS
+              value: "localhost,127.0.0.1,bytestream.local"
+            - name: DEBUG
+              value: "True"
